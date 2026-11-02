@@ -27,7 +27,7 @@ läuft die Pipeline trotzdem** (Google-News-RSS + selbst gezeichnete Titelkarten
 ## Schnellstart
 
 ```bash
-git clone -b arena/ede4bccb-socialmaker5-0 https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
+git clone https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
 bash ~/Socialmaker5.0/setup/00-both-machines.sh    # BEIDE Rechner
 sudo tailscale up                                  # BEIDE Rechner, einmalig
 bash ~/Socialmaker5.0/setup/01-dell-ollama.sh      # nur Dell
