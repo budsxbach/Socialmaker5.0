@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AuronOrigin · Der 0-€-Autonomie-Plan</title>
+<style>
+:root{
+  --bg:#070b16; --bg2:#0b1120; --card:#111a2e; --card2:#152039;
+  --line:#23324f; --txt:#e9eef8; --mut:#93a6c4; --dim:#6c80a3;
+  --acc:#35e0c8; --acc2:#8b7cff; --gold:#ffc46b; --red:#ff8080;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--txt);font:15.5px/1.68 var(--sans);
+  background-image:radial-gradient(900px 500px at 12% -8%,rgba(53,224,200,.10),transparent 70%),
+                   radial-gradient(800px 500px at 92% 0%,rgba(139,124,255,.11),transparent 70%)}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+code,pre{font-family:var(--mono)}
+h1,h2,h3,h4{line-height:1.25;letter-spacing:-.015em}
+h2{font-size:26px;margin:0 0 10px}h3{font-size:18px;margin:0}
+p{margin:10px 0}small{color:var(--mut)}
+
+/* ---------- Fortschritt ---------- */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(7,11,22,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:9px 18px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#topbar .brand{font-weight:800;letter-spacing:.08em;font-size:12px;color:var(--acc)}
+#progwrap{flex:1;min-width:140px;max-width:420px;height:8px;background:#152039;
+  border-radius:99px;overflow:hidden}
+#prog{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));
+  transition:width .35s ease}
+#progtxt{font-size:12px;color:var(--mut);white-space:nowrap}
+.tbtn{background:transparent;border:1px solid var(--line);color:var(--mut);
+  padding:5px 11px;border-radius:8px;cursor:pointer;font:12px var(--sans)}
+.tbtn:hover{border-color:var(--acc);color:var(--acc)}
+#search{background:#0d1626;border:1px solid var(--line);color:var(--txt);
+  border-radius:8px;padding:6px 10px;font:12px var(--sans);width:170px}
+
+/* ---------- Layout ---------- */
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:34px;
+  max-width:1320px;margin:0 auto;padding:76px 26px 90px}
+nav{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 100px);overflow:auto;
+  background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px 10px}
+nav .navtitle{font-size:11px;letter-spacing:.14em;color:var(--dim);padding:0 10px 10px;
+  text-transform:uppercase}
+nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--mut);font-size:13.5px;
+  border-left:2px solid transparent}
+nav a:hover{background:#152039;color:var(--txt);text-decoration:none}
+nav a.active{color:var(--acc);border-left-color:var(--acc);background:#12243a}
+main{min-width:0}
+
+/* ---------- Hero ---------- */
+.hero{background:linear-gradient(135deg,#101a30,#0e1530 55%,#14142c);
+  border:1px solid var(--line);border-radius:20px;padding:34px 34px 28px;margin-bottom:34px;
+  position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:340px;height:340px;right:-90px;top:-140px;
+  border:1px solid rgba(53,224,200,.25);border-radius:50%;
+  box-shadow:0 0 0 46px rgba(53,224,200,.045),0 0 0 92px rgba(139,124,255,.04)}
+.hero h1{font-size:36px;margin:0 0 8px;position:relative;z-index:1}
+.hero .sub{font-size:17px;color:var(--mut);max-width:710px;position:relative;z-index:1}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;position:relative;z-index:1}
+.badge{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:99px;
+  padding:5px 12px;font-size:12px;color:var(--txt)}
+.badge.hi{border-color:rgba(53,224,200,.5);color:var(--acc)}
+.quick{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:12px;
+  padding:16px;margin-top:22px;position:relative;z-index:1}
+.quick b{display:block;font-size:12px;letter-spacing:.1em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:8px}
+
+/* ---------- Sektionen ---------- */
+section{margin:0 0 46px;scroll-margin-top:80px}
+.sechead{display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid var(--line);
+  padding-bottom:12px;margin-bottom:20px;flex-wrap:wrap}
+.secnum{font:700 12px var(--mono);color:var(--bg);background:var(--acc);
+  border-radius:7px;padding:5px 9px;margin-top:6px}
+.secnum.v2{background:var(--acc2)}
+.sechead .grow{flex:1;min-width:220px}
+.lead{color:var(--mut);margin:4px 0 0;font-size:14.5px}
+
+/* ---------- Steps ---------- */
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  margin:0 0 14px;padding:0;overflow:hidden;transition:opacity .2s,border-color .2s}
+.step.done{border-color:rgba(53,224,200,.45);opacity:.72}
+.step.done h3{text-decoration:line-through;text-decoration-color:var(--acc)}
+.stephead{display:flex;align-items:center;gap:13px;padding:15px 18px;cursor:default}
+.tick{flex:none;width:23px;height:23px;position:relative;cursor:pointer}
+.tick input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
+.tick span{position:absolute;inset:0;border:2px solid var(--dim);border-radius:7px;
+  background:#0c1424;transition:.15s}
+.tick input:checked+span{background:var(--acc);border-color:var(--acc)}
+.tick input:checked+span:after{content:"✓";position:absolute;color:#04121a;font-weight:900;
+  font-size:15px;left:5px;top:-2px}
+.stephead .grow{flex:1;min-width:0}
+.stepbody{padding:0 18px 18px 54px;border-top:1px solid rgba(35,50,79,.6)}
+.stepbody p:first-child{margin-top:14px}
+.tag{font:11px var(--mono);color:var(--acc2);background:rgba(139,124,255,.10);
+  border:1px solid rgba(139,124,255,.28);padding:2px 7px;border-radius:5px;margin-left:8px}
+
+/* ---------- Code ---------- */
+.codewrap{margin:14px 0;border:1px solid #20304c;border-radius:11px;overflow:hidden;
+  background:#080d18}
+.codehead{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:#101a2c;border-bottom:1px solid #20304c;padding:7px 11px}
+.codehead span{font:11.5px var(--mono);color:var(--mut);letter-spacing:.03em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copybtn{flex:none;background:#1b2b46;color:var(--acc);border:1px solid #2c4267;
+  border-radius:7px;padding:4px 10px;font:11.5px var(--sans);font-weight:700;cursor:pointer}
+.copybtn:hover{background:var(--acc);color:#04121a}
+.copybtn.ok{background:var(--acc);color:#04121a}
+pre{margin:0;padding:14px 16px;overflow:auto;max-height:520px;font-size:12.6px;
+  line-height:1.62;color:#d7e2f5;white-space:pre;tab-size:2}
+pre code{color:inherit}
+details{margin:12px 0;background:#0d1627;border:1px solid var(--line);
+  border-radius:9px;padding:9px 13px}
+summary{cursor:pointer;color:var(--acc);font-size:13.5px;font-weight:600}
+details p,details ul{color:var(--mut);font-size:14px}
+
+/* ---------- Tabellen / Karten ---------- */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--acc);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  background:#0f192b}
+tr:last-child td{border-bottom:0}
+td code{font-size:12.5px;color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px;margin:16px 0}
+.box{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:16px}
+.box h4{margin:0 0 8px;font-size:15px;color:var(--txt)}
+.box p{font-size:13.6px;color:var(--mut);margin:0}
+.box.warn{border-color:rgba(255,196,107,.45);background:rgba(255,196,107,.06)}
+.box.warn h4{color:var(--gold)}
+.box.good{border-color:rgba(53,224,200,.4)}
+.box.good h4{color:var(--acc)}
+.box.bad{border-color:rgba(255,128,128,.4)}
+.box.bad h4{color:var(--red)}
+.callout{border-left:3px solid var(--gold);background:rgba(255,196,107,.06);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0;font-size:14px}
+.callout b{color:var(--gold)}
+.pill{display:inline-block;font:11px var(--mono);padding:2px 8px;border-radius:99px;
+  background:#17253d;color:var(--mut);border:1px solid var(--line)}
+ul,ol{color:var(--mut);padding-left:20px}li{margin:5px 0}
+.kbd{font:12px var(--mono);background:#0d1627;border:1px solid var(--line);
+  border-radius:5px;padding:1px 6px;color:var(--txt)}
+.flow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:18px 0}
+.flow div{background:var(--card2);border:1px solid var(--line);border-radius:10px;
+  padding:9px 13px;font-size:13px;white-space:nowrap}
+.flow div b{color:var(--acc)}
+.flow span{color:var(--dim);font-size:17px}
+.ideabox{margin-top:12px;background:#0c1526;border:1px dashed var(--acc);border-radius:10px;
+  padding:14px;font-size:15px;color:var(--txt);min-height:52px}
+.btn{background:var(--acc);color:#04121a;border:0;border-radius:9px;padding:9px 15px;
+  font:600 13px var(--sans);cursor:pointer}
+.btn.sec{background:#1b2b46;color:var(--acc);border:1px solid #2c4267}
+footer{border-top:1px solid var(--line);padding:24px 0 0;color:var(--dim);font-size:13px}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;padding:70px 16px 60px}
+  nav{position:relative;top:0;max-height:none;display:flex;flex-wrap:wrap;gap:2px}
+  nav .navtitle{width:100%}
+  .hero{padding:24px}.hero h1{font-size:28px}
+  .stepbody{padding-left:18px}
+  #search{width:120px}
+}
+@media print{
+  #topbar,nav,.copybtn,.codehead,.btn,.tbtn{display:none!important}
+  body{background:#fff;color:#111}
+  .layout{display:block;padding:0}.hero,section,.step,.box{background:#fff;color:#111;
+    border-color:#bbb;break-inside:avoid}
+  pre{background:#f4f4f4;color:#111;max-height:none;white-space:pre-wrap}
+  a{color:#0645ad}.step.done{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <span class="brand">AURONORIGIN / PLAN</span>
+  <div id="progwrap"><div id="prog"></div></div>
+  <span id="progtxt">0 / 0 erledigt</span>
+  <input id="search" placeholder="Schritte filtern …" aria-label="Suche">
+  <button class="tbtn" id="toggleDetails">Alle Details ▾</button>
+  <button class="tbtn" id="printBtn">Drucken / PDF</button>
+  <button class="tbtn" id="resetBtn">Fortschritt löschen</button>
+</div>
+
+<div class="layout">
+<nav id="nav">
+  <div class="navtitle">Inhalt</div>
+  <a href="#start">Start &amp; Schnellstart</a>
+  <a href="#realitaet">0 · Realitätscheck</a>
+  <a href="#nische">1 · Nischen-Empfehlung</a>
+  <a href="#arch">2 · Architektur</a>
+  <a href="#phase0">3 · Phase 0: Basis</a>
+  <a href="#phase1">4 · Phase 1: KI-Modell</a>
+  <a href="#phase2">5 · Phase 2: n8n</a>
+  <a href="#phase3">6 · Phase 3: Worker</a>
+  <a href="#phase4">7 · Phase 4: Gratis-Quellen</a>
+  <a href="#phase5">8 · Phase 5: Workflow</a>
+  <a href="#phase6">9 · Phase 6: Freigabe</a>
+  <a href="#geld">10 · Geld verdienen</a>
+  <a href="#recht">11 · Recht &amp; Kennzeichnung</a>
+  <a href="#bonus">12 · Bonus-Phasen</a>
+  <a href="#fehler">13 · Stolpersteine</a>
+  <a href="#dateien">14 · Alle Dateien</a>
+  <a href="#quellen">15 · Quellen</a>
+</nav>
+
+<main>
+
+<div class="hero" id="start">
+  <h1>Der 0-€-Autonomie-Plan</h1>
+  <p class="sub">Von der Recherche bis zum fertigen, hochladebereiten Video- &amp; Post-Paket für
+  <b>AuronOrigin</b> — YouTube, Instagram, Facebook, X, TikTok. Lokal auf deinem Dell,
+  getaktet vom 24/7-Laptop, ohne laufende Kosten.</p>
+  <div class="badges">
+    <span class="badge hi">Beide Laptops: Ubuntu/Linux</span>
+    <span class="badge hi">0 €/Monat · nur Free-Tiers</span>
+    <span class="badge">Dell 5530 = Gehirn + Renderer</span>
+    <span class="badge">5-GB-Laptop = n8n / Taktgeber</span>
+    <span class="badge">Faceless, KI-Stimme, Untertitel</span>
+    <span class="badge">Privatkonten → 1-Klick-Freigabe</span>
+    <span class="badge">Ziel: Ad Revenue + Sponsoring</span>
+    <span class="badge">Stand {{DATE}}</span>
+  </div>
+  <div class="quick">
+    <b>Schnellstart · 4 Zeilen</b>
+    <pre data-label="Auf BEIDEN Laptops"><code>git clone -b arena/ede4bccb-socialmaker5-0 https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
+bash ~/Socialmaker5.0/setup/00-both-machines.sh     # auf beiden
+sudo tailscale up                                    # einmalig je Gerät, Browser-Login
+# danach: Phase 1 auf dem Dell, Phase 2 auf dem 24/7-Laptop</code></pre>
+    <small>Jeder Kasten unten hat einen <b>⧉ Kopieren</b>-Button. Jeder Schritt ist abhakbar —
+    dein Fortschritt bleibt im Browser gespeichert. Alle Dateien liegen gleichzeitig als echte
+    Dateien im Repo (siehe „Alle Dateien“).</small>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<section id="realitaet">
+  <div class="sechead"><span class="secnum">0</span><div class="grow">
+    <h2>Realitätscheck zuerst</h2>
+    <p class="lead">Ich baue dir etwas, das wirklich läuft — darum vier ehrliche Grenzen vorweg.</p>
+  </div></div>
+
+  <div class="grid">
+    <div class="box good"><h4>✓ Was dein Dell kann</h4>
+      <p>Ein 7B-Modell in Q4-Quantisierung (~4,7 GB) auf der CPU: Skripte, strukturiertes JSON,
+      Themenplanung, Quellenauswertung, Captions, Hashtags. Dazu FFmpeg-Rendering in 1080×1920.
+      Pro Lauf entsteht ein komplettes Paket in ~5–12 Minuten.</p></div>
+    <div class="box bad"><h4>✕ Was dein Dell nicht kann</h4>
+      <p>Fotorealistische Bilder/Videos lokal generieren oder ein Avatar-Modell betreiben.
+      Die Iris Xe teilt sich den RAM und hat keinen nutzbaren VRAM-Vorteil — bewusst CPU-only.
+      Stock-Clips aus freien Quellen sind der richtige Weg.</p></div>
+    <div class="box warn"><h4>⚠ „Autonom“ ≠ „ohne dich“</h4>
+      <p>Auto-Upload für Instagram/Facebook/TikTok setzt Business-Konto + geprüfte Developer-App
+      voraus; du hast Privatkonten. Also: volle Automation bis zum fertigen Paket, dann
+      <b>1 Klick Freigabe</b> und manueller Upload. Das ist markensicherer als ein API-Bann.</p></div>
+    <div class="box warn"><h4>⚠ „Viel Geld“ braucht eine Brücke</h4>
+      <p>Shorts-Ad-Umsatz ist klein. TikTok zahlt im Creator-Rewards-Programm nur für Videos
+      <b>über 1 Minute</b>; YouTube verlangt 1.000 Abos + 4.000 Watch Hours (oder 10 Mio.
+      Shorts-Views/90 Tage) — für Neuanmeldungen ab 01.02.2027 doppelt so hoch.
+      Deshalb: 70-Sekunden-Videos <b>plus</b> Langform-Schiene plus Sponsoring. Details in Kapitel 10.</p></div>
+  </div>
+
+  <div class="callout"><b>Kurz gesagt:</b> Du bekommst eine Pipeline, die jeden Morgen ohne
+  Zutun ein fertiges Paket ablegt: <code>video.mp4</code>, <code>captions.srt</code>,
+  <code>thumbnail.png</code>, Titel, Beschreibung, Hashtags, X/Facebook-Post, Quellenliste und
+  Upload-Checkliste. Was fehlt, ist nur dein Klick und der Upload. Kosten: 0 € laufend.</div>
+
+  <div class="step" data-step="r1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>Grenzen akzeptiert, Erwartung kalibriert</h3></div></div>
+    <div class="stepbody"><p>Hake das ab, wenn du mit „Automation bis zur Freigabe, manueller Upload,
+    Wachstum organisch, Geld über Langform + Sponsoring“ einverstanden bist. Alles Weitere baut darauf auf.</p>
+    <details><summary>Warum ich das so deutlich sage</summary><p>Ein Plan, der „vollautomatisch auf 5
+    Plattformen posten und viel Geld verdienen“ verspricht, scheitert an App-Reviews, Plattform-Regeln
+    und an der Physik deiner CPU. Die ehrliche Version ist schneller umgesetzt und hält länger.</p></details>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="nische">
+  <div class="sechead"><span class="secnum">1</span><div class="grow">
+    <h2>Deine Nische (du hast mich entscheiden lassen)</h2>
+    <p class="lead">„The Systems Edge“ — KI, Software &amp; digitale Systeme für Solo-Unternehmer.
+    English-first, Deutsch als zweite Spur.</p>
+  </div></div>
+
+  <table>
+    <tr><th>Säule</th><th>Warum sie Geld bringt</th><th>Beispielthema</th></tr>
+    <tr><td><b>KI &amp; Werkzeuge</b></td><td>Höchste Sponsor-Nachfrage (SaaS, Hosting, VPN, Cloud),
+      hohe CPMs im Tech-/Business-Umfeld, funktioniert faceless.</td>
+      <td>„What a self-hosted AI agent can actually do“</td></tr>
+    <tr><td><b>Systeme für Solopreneure</b></td><td>Evergreen, kaum Konkurrenz durch Nachrichten,
+      perfekt für dein Kleingewerbe-Storytelling und spätere eigene Produkte.</td>
+      <td>„Seven repetitive tasks you should never do twice“</td></tr>
+    <tr><td><b>Tech-Geschichte</b></td><td>Hohe Watchtime, extrem günstig produzierbar (Titelkarten
+      statt Stock), ideal um die 70-Sekunden-Marke zuverlässig zu füllen.</td>
+      <td>„How RSS quietly survived every platform“</td></tr>
+  </table>
+
+  <div class="grid">
+    <div class="box"><h4>Warum Englisch zuerst?</h4><p>Deutlich größerer Werbemarkt und höhere CPMs
+      als DACH-only. Die deutsche Spur ist später mit einem einzigen Wort umschaltbar
+      (<code>CONTENT_LANG=de</code>) — kein Umbau nötig.</p></div>
+    <div class="box"><h4>Warum 70 Sekunden?</h4><p>TikToks Creator Rewards zählt erst Videos ab
+      1 Minute; YouTube Shorts erlaubt bis 3 Minuten. 70 s ist der sweet spot zwischen
+      Monetarisierbarkeit, Watchtime und CPU-Renderzeit.</p></div>
+    <div class="box"><h4>Warum kein Finanz-/Health-Thema?</h4><p>Hohe CPM, aber Werbe- und
+      Haftungsrisiken, die du mit einer KI-Skript-Pipeline ohne Fact-Checking nicht tragen willst.</p></div>
+  </div>
+
+  <div class="box" style="margin-top:16px">
+    <h4>Ideen-Generator <span class="pill">klickbar</span></h4>
+    <p style="margin-bottom:10px">24 Themen liegen schon in <code>worker/topics.json</code> und werden
+      automatisch durchrotiert. Hier ein Vorgeschmack:</p>
+    <button class="btn" id="ideaBtn">🎲 Zufalls-Idee</button>
+    <button class="btn sec" id="copyIdea">⧉ Idee kopieren</button>
+    <div class="ideabox" id="ideaBox">Klicke auf „Zufalls-Idee“.</div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="arch">
+  <div class="sechead"><span class="secnum">2</span><div class="grow">
+    <h2>Architektur: wer macht was</h2>
+    <p class="lead">Zwei Rechner, ein privates Netz (Tailscale), keine offenen Ports im Internet.</p>
+  </div></div>
+
+  <div class="flow">
+    <div><b>24/7-Laptop</b><br>n8n · Cron 06:00</div><span>→</span>
+    <div><b>Tailscale</b><br>privates VPN, 0 €</div><span>→</span>
+    <div><b>Dell</b><br>Worker :8787</div><span>→</span>
+    <div><b>Ollama</b><br>qwen2.5:7b CPU</div><span>→</span>
+    <div><b>RSS / Brave</b><br>Recherche</div><span>→</span>
+    <div><b>TTS + FFmpeg</b><br>70 s MP4</div><span>→</span>
+    <div><b>out/ENTWURF</b><br>1-Klick-Freigabe</div><span>→</span>
+    <div><b>Du</b><br>Upload × 5</div>
+  </div>
+
+  <table>
+    <tr><th></th><th>Dell Latitude 5530</th><th>24/7-Laptop (5 GB RAM)</th></tr>
+    <tr><td>Rolle</td><td>Gehirn, Stimme, Schnitt, Dateiablage</td><td>Taktgeber, Protokoll, Wochenplan</td></tr>
+    <tr><td>Software</td><td>Ollama, Python-Worker, FFmpeg, edge-tts</td><td>Docker + n8n (SQLite), Swap</td></tr>
+    <tr><td>RAM-Budget</td><td>~4,7 GB Modell + ~2 GB Worker, Rest Puffer</td><td>1,1 GB Limit für n8n + 4 GB Swap</td></tr>
+    <tr><td>Erreichbar</td><td>nur über <code>tailscale0</code> (ufw)</td><td>lokal :5678, optional Cloudflare-Tunnel</td></tr>
+    <tr><td>24/7 nötig?</td><td>Nein — wird nachts für ~10 Min gebraucht</td><td>Ja — deshalb Schlafmodus aus</td></tr>
+  </table>
+  <div class="callout"><b>Wichtig:</b> Der Dell muss <i>nicht</i> 24/7 laufen. n8n startet morgens
+  den Job; wenn der Dell aus ist, läuft der Workflow auf Fehler. Praktisch: Dell per
+  <code>rtcwake</code> oder einfach tagsüber anlassen. Alternative im Bonus-Kapitel.</div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="phase0">
+  <div class="sechead"><span class="secnum">3</span><div class="grow">
+    <h2>Phase 0 · Beide Laptops vorbereiten</h2>
+    <p class="lead">Basis-Pakete, Tailscale, „nie schlafen“. Einmalig, ~10 Minuten.</p>
+    <button class="tbtn copyall">⧉ Alle Befehle dieser Phase kopieren</button>
+  </div></div>
+
+  <div class="step" data-step="p0-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>0.1 Repo auf BEIDE Laptops holen</h3></div></div>
+    <div class="stepbody">
+      <p>Alles liegt auf dem Branch dieser Sitzung. Alternativ: einmal klonen und per
+      <code>scp -r ~/Socialmaker5.0 USER@TAILSCALE_IP:~/</code> auf den zweiten Rechner kopieren.</p>
+      <pre data-label="Beide Laptops"><code>git clone -b arena/ede4bccb-socialmaker5-0 https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
+cd ~/Socialmaker5.0 && ls -R | head -40</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p0-2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>0.2 Basisskript ausführen <span class="tag">setup/00-both-machines.sh</span></h3></div></div>
+    <div class="stepbody">
+      <p>Installiert ffmpeg, DejaVu-Fonts, espeak-ng (TTS-Fallback), Python-venv und Tailscale;
+      deaktiviert Sleep/Lid/Idle und stellt die Zeitzone auf Europe/Berlin.</p>
+      <pre data-label="Beide Laptops"><code>bash ~/Socialmaker5.0/setup/00-both-machines.sh</code></pre>
+      <pre data-label="Vollständiger Inhalt: setup/00-both-machines.sh"><code>{{FILE:setup/00-both-machines.sh}}</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p0-3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>0.3 Tailscale verbinden &amp; IPs notieren</h3></div></div>
+    <div class="stepbody">
+      <p>Der Free-Tier reicht für bis zu 100 Geräte. Es gibt keine Portweiterleitung und keine
+      öffentliche Angriffsfläche — genau richtig für 0 €.</p>
+      <pre data-label="Je Gerät, einmalig"><code>sudo tailscale up        # druckt eine Login-URL -> im Browser öffnen
+tailscale status          # beide 100.x.y.z-IPs notieren
+tailscale ip -4           # eigene IP</code></pre>
+      <div class="callout"><b>Notiere jetzt:</b> <code>DELL_IP = 100.…</code> und
+      <code>SERVER_IP = 100.…</code>. Die brauchst du in Phase 2/5.</div>
+    </div></div>
+
+  <div class="step" data-step="p0-4"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>0.4 Beide Rechner erreichbar prüfen</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Vom 24/7-Laptop aus"><code>ping -c 3 DELL_IP
+curl -sS http://DELL_IP:11434/api/tags   # erwartet: Fehler/Timeout bis Phase 1 fertig ist
+ssh USER@DELL_IP 'echo ok' 2>/dev/null || echo "SSH optional"</code></pre>
+      <details><summary>Warum Tailscale statt Portweiterleitung?</summary><p>Deine Fritzbox/Router
+      bleibt zu, Cloudflare muss nichts freigeben, und n8n-Oberfläche wie Worker sind nur für
+      deine eigenen Geräte sichtbar. Die ufw-Regeln in Phase 1 binden zusätzlich alles an
+      das Interface <code>tailscale0</code>.</p></details>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="phase1">
+  <div class="sechead"><span class="secnum">4</span><div class="grow">
+    <h2>Phase 1 · Lokales KI-Modell auf dem Dell</h2>
+    <p class="lead">Ollama + Qwen2.5 7B (Autor) + Llama 3.2 3B (schneller Planer). CPU-only, ~5,5 GB.</p>
+    <button class="tbtn copyall">⧉ Alle Befehle dieser Phase kopieren</button>
+  </div></div>
+
+  <div class="step" data-step="p1-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>1.1 Installationsskript <span class="tag">setup/01-dell-ollama.sh</span></h3></div></div>
+    <div class="stepbody">
+      <p>Installiert Ollama, lädt beide Modelle, setzt den systemd-Override und schließt die
+      Firewall bis auf Tailscale.</p>
+      <pre data-label="NUR auf dem Dell"><code>bash ~/Socialmaker5.0/setup/01-dell-ollama.sh</code></pre>
+      <pre data-label="Vollständiger Inhalt: setup/01-dell-ollama.sh"><code>{{FILE:setup/01-dell-ollama.sh}}</code></pre>
+      <pre data-label="config/ollama-override.conf"><code>{{FILE:config/ollama-override.conf}}</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p1-2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>1.2 Benchmark: wie schnell ist deine CPU wirklich?</h3></div></div>
+    <div class="stepbody">
+      <p>Erwartung: <b>ca. 5–10 Tokens/Sekunde</b> beim 7B-Modell auf dem i5-1235U. Für ein
+      Skript (~400 Tokens) sind das 40–80 Sekunden — völlig okay für einen Nachtlauf.</p>
+      <pre data-label="Benchmark kopieren"><code>time curl -sS http://127.0.0.1:11434/api/generate \
+  -d '{"model":"qwen2.5:7b-instruct","prompt":"Schreibe 5 Stichpunkte ueber Automatisierung.","stream":false}' \
+  | jq '{tokens: .eval_count, sekunden: (.eval_duration/1000000000), tok_pro_sek: (.eval_count/(.eval_duration/1000000000))}'
+ollama ps</code></pre>
+      <details><summary>Welches Modell wann?</summary>
+      <table><tr><th>Modell</th><th>Größe</th><th>Einsatz</th></tr>
+      <tr><td><code>qwen2.5:7b-instruct</code></td><td>~4,7 GB</td><td>Skripte, strukturiertes JSON, DE + EN</td></tr>
+      <tr><td><code>llama3.2:3b</code></td><td>~2,0 GB</td><td>Wochenplan, Klassifikation, schnelle Tests</td></tr>
+      <tr><td>14B / 70B</td><td>9 GB+</td><td>❌ auf 16 GB CPU zu langsam — nicht installieren</td></tr></table>
+      <p>Alternative, falls Qwen nicht gefällt: <code>ollama pull llama3.1:8b-instruct-q4_K_M</code>
+      und <code>OLLAMA_MODEL</code> in der <code>.env</code> ändern.</p></details>
+    </div></div>
+
+  <div class="step" data-step="p1-3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>1.3 Der wichtige Test: valides JSON</h3></div></div>
+    <div class="stepbody">
+      <p>Die Pipeline verlangt <code>format: "json"</code>. Wenn das hier sauber kommt,
+      funktioniert der ganze Rest.</p>
+      <pre data-label="JSON-Modus testen"><code>curl -sS http://127.0.0.1:11434/api/chat -d '{
+  "model":"qwen2.5:7b-instruct","stream":false,"format":"json",
+  "messages":[{"role":"user","content":"Gib ein JSON mit den Keys title und scenes (Array mit 2 strings) zurueck."}]
+}' | jq -r '.message.content' | jq .</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p1-4"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>1.4 Firewall kontrollieren</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Dell"><code>sudo ufw status verbose | grep -E '11434|8787|tailscale0'
+# Von AUSSERHALB des Tailscale-Netzes muss 11434 unerreichbar sein:
+curl -m 3 -sS http://DEINE_LOKALE_LAN_IP:11434/api/tags || echo "gut: blockiert"</code></pre>
+      <details><summary>Sicherheitshinweis</summary><p><code>OLLAMA_HOST=0.0.0.0</code> allein
+      wäre riskant. Erst die ufw-Regel <code>allow in on tailscale0</code> macht es sicher.
+      Nie <code>11434</code> ohne Firewall ins Internet hängen — Ollama hat keine Authentifizierung.</p></details>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="phase2">
+  <div class="sechead"><span class="secnum">5</span><div class="grow">
+    <h2>Phase 2 · n8n auf dem 24/7-Laptop</h2>
+    <p class="lead">5 GB RAM reichen — wenn man Desktop aus, Swap an und n8n an die Leine legt.</p>
+    <button class="tbtn copyall">⧉ Alle Befehle dieser Phase kopieren</button>
+  </div></div>
+
+  <div class="step" data-step="p2-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>2.1 Installationsskript <span class="tag">setup/02-server-n8n.sh</span></h3></div></div>
+    <div class="stepbody">
+      <pre data-label="NUR auf dem 24/7-Laptop"><code>bash ~/Socialmaker5.0/setup/02-server-n8n.sh</code></pre>
+      <pre data-label="Vollständiger Inhalt: setup/02-server-n8n.sh"><code>{{FILE:setup/02-server-n8n.sh}}</code></pre>
+      <div class="callout"><b>Nach dem Skript einmal ab- und wieder anmelden</b> (wg. docker-Gruppe),
+      sonst <code>newgrp docker</code>. Prüfen: <code>docker ps</code> ohne sudo.</div>
+    </div></div>
+
+  <div class="step" data-step="p2-2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>2.2 Die Compose-Datei verstehen <span class="tag">config/docker-compose.yml</span></h3></div></div>
+    <div class="stepbody">
+      <p><code>mem_limit: 1100m</code>, <code>NODE_OPTIONS=--max-old-space-size=640</code>,
+      1 paralleler Workflow, SQLite, automatisches Löschen alter Executions nach 7 Tagen.
+      Genau diese vier Dinge verhindern, dass n8n deinen 5-GB-Rechner in die Knie zwingt.</p>
+      <pre data-label="config/docker-compose.yml"><code>{{FILE:config/docker-compose.yml}}</code></pre>
+      <pre data-label="config/env.example (Vorlage für beide Rechner)"><code>{{FILE:config/env.example}}</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p2-3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>2.3 n8n öffnen, Owner anlegen, Healthcheck</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="24/7-Laptop"><code>cd ~/AuronOrigin/n8n
+nano .env                       # N8N_HOST / WEBHOOK_URL / TZ kontrollieren
+docker compose up -d && docker compose logs -f --tail=30
+# Browser: http://SERVER_IP:5678   (oder http://localhost:5678 am Gerät)
+curl -sS http://127.0.0.1:5678/healthz; echo
+free -h | head -2                # RAM im Auge behalten</code></pre>
+      <p>Beim ersten Start legst du den Owner-Account an (lokal gespeichert, keine Cloud-Pflicht).
+      <b>Backup:</b> <code>~/AuronOrigin/n8n/n8n_data</code> enthält Datenbank + verschlüsselte
+      Credentials — regelmäßig sichern (Bonus-Phase).</p>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="phase3">
+  <div class="sechead"><span class="secnum">6</span><div class="grow">
+    <h2>Phase 3 · Der Worker auf dem Dell</h2>
+    <p class="lead">Das eigentliche „Modell erledigt Aufgaben“: eine kleine API, die Recherche →
+    Skript → Stimme → Schnitt → Paket kapselt. n8n ruft nur einen Endpunkt auf.</p>
+    <button class="tbtn copyall">⧉ Alle Befehle dieser Phase kopieren</button>
+  </div></div>
+
+  <div class="step" data-step="p3-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>3.1 Installationsskript <span class="tag">setup/03-worker.sh</span></h3></div></div>
+    <div class="stepbody">
+      <pre data-label="NUR auf dem Dell"><code>bash ~/Socialmaker5.0/setup/03-worker.sh</code></pre>
+      <pre data-label="Vollständiger Inhalt: setup/03-worker.sh"><code>{{FILE:setup/03-worker.sh}}</code></pre>
+      <pre data-label="systemd/auron-worker.service"><code>{{FILE:systemd/auron-worker.service}}</code></pre>
+      <pre data-label="worker/requirements.txt"><code>{{FILE:worker/requirements.txt}}</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p3-2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>3.2 .env setzen — der einzige Pflichtwert</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Dell"><code>TOKEN=$(openssl rand -hex 24); echo "Dein Token: $TOKEN"
+nano ~/AuronOrigin/.env
+# WORKER_TOKEN=$TOKEN  |  CONTENT_LANG=en  |  TARGET_SECONDS=70
+sudo systemctl restart auron-worker
+curl -sS http://127.0.0.1:8787/health | jq .
+sudo journalctl -u auron-worker -n 30 --no-pager</code></pre>
+      <p>Der Token schützt <code>/run</code>, <code>/plan</code> und <code>/approve</code>.
+      Die Review-Seite ist bewusst ohne Token erreichbar, aber nur über Tailscale.</p>
+    </div></div>
+
+  <div class="step" data-step="p3-3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>3.3 Endpunkte kennenlernen</h3></div></div>
+    <div class="stepbody">
+      <table><tr><th>Endpunkt</th><th>Was passiert</th></tr>
+      <tr><td><code>GET /health</code></td><td>Modell, freier Speicher, Anzahl Entwürfe, welche Keys aktiv sind</td></tr>
+      <tr><td><code>POST /run</code></td><td>Kompletter Lauf: Recherche → Ollama-JSON → 8 Szenen TTS → Clips/Karten → MP4 → Texte</td></tr>
+      <tr><td><code>POST /plan</code></td><td>Montags 7 Themen + Hooks als Markdown im Ordner <code>out/PLAN</code></td></tr>
+      <tr><td><code>GET /packages</code></td><td>Alle Entwürfe als JSON</td></tr>
+      <tr><td><code>POST /approve</code></td><td>Verschiebt nach <code>out/FREIGEGEBEN</code> (dein 1 Klick)</td></tr>
+      <tr><td><code>POST /discard</code></td><td>Verschiebt nach <code>out/VERWORFEN</code></td></tr>
+      <tr><td><code>GET /review</code></td><td>Klickbare Freigabe-Seite mit Video-Player</td></tr>
+      <tr><td><code>/out/…</code></td><td>Direkter Download aller fertigen Dateien</td></tr></table>
+      <pre data-label="Quellcode worker/settings.py"><code>{{FILE:worker/settings.py}}</code></pre>
+      <pre data-label="Quellcode worker/sources.py"><code>{{FILE:worker/sources.py}}</code></pre>
+      <pre data-label="Quellcode worker/voice.py"><code>{{FILE:worker/voice.py}}</code></pre>
+      <pre data-label="Quellcode worker/render.py"><code>{{FILE:worker/render.py}}</code></pre>
+      <pre data-label="Quellcode worker/pipeline.py"><code>{{FILE:worker/pipeline.py}}</code></pre>
+      <pre data-label="Quellcode worker/app.py"><code>{{FILE:worker/app.py}}</code></pre>
+      <details><summary>Wie robust ist das?</summary><p>Jede externe Abhängigkeit hat einen Fallback:
+      kein Brave-Key → Google-News-RSS; gar kein Netz → Allgemeinwissen ohne erfundene Zahlen;
+      kein Pexels-Key → selbst gezeichnete Titelkarten; edge-tts down → piper → espeak-ng;
+      Ollama down → Notfall-Skript mit <code>degraded: true</code> im Manifest. Die Pipeline
+      produziert also immer ein Paket und markiert Qualitätsprobleme sichtbar.</p></details>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="phase4">
+  <div class="sechead"><span class="secnum">7</span><div class="grow">
+    <h2>Phase 4 · Gratis-Quellen (optional, aber empfohlen)</h2>
+    <p class="lead">Alles läuft auch mit <b>null</b> API-Keys. Diese drei heben nur die Qualität.</p>
+    <button class="tbtn copyall">⧉ Alle Befehle dieser Phase kopieren</button>
+  </div></div>
+
+  <div class="step" data-step="p4-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>4.1 Ohne alles: RSS + Titelkarten</h3></div></div>
+    <div class="stepbody"><p>Google News RSS liefert aktuelle Schlagzeilen zum Thema, entirely
+      kostenlos. Die Visuals sind dann gradient-Titelkarten, die der Worker mit Pillow selbst malt.
+      <b>Starte genau so</b> — du siehst in 10 Minuten ein erstes Video.</p>
+      <pre data-label="Recherche testen"><code>curl -sS 'https://news.google.com/rss/search?q=local+AI+agents&hl=en-US&gl=US&ceid=US:en' | head -c 500; echo</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p4-2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>4.2 Brave Search API · 2.000 Anfragen/Monat gratis</h3></div></div>
+    <div class="stepbody">
+      <p>Key holen unter <a href="https://search.brave.com/api/" target="_blank">search.brave.com/api</a>
+      (Free-Plan, 1 Query/Sekunde). Bei 1 Video/Tag brauchst du ~30/Monat — also 1,5 % des Kontingents.</p>
+      <pre data-label="In ~/AuronOrigin/.env eintragen"><code>BRAVE_API_KEY=DEIN_BRAVE_KEY
+# Test:
+curl -sS 'https://api.search.brave.com/res/v1/web/search?q=local%20AI%20agents&count=3' \
+  -H 'Accept: application/json' -H "X-Subscription-Token: DEIN_BRAVE_KEY" | jq '.web.results[].title'</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p4-3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>4.3 Pexels · kostenlose Stock-Clips im Hochformat</h3></div></div>
+    <div class="stepbody">
+      <p>Key unter <a href="https://www.pexels.com/api/" target="_blank">pexels.com/api</a>.
+      Der Worker sucht pro Szene ein passendes Portrait-Video; ohne Treffer fällt er automatisch
+      auf die Titelkarte zurück.</p>
+      <pre data-label="In ~/AuronOrigin/.env eintragen"><code>PEXELS_API_KEY=DEIN_PEXELS_KEY
+sudo systemctl restart auron-worker
+curl -sS http://127.0.0.1:8787/health | jq '{brave_key,pexels_key}'</code></pre>
+      <div class="callout"><b>Lizenz:</b> Pexels/Pixabay-Clips sind für kommerzielle Nutzung frei,
+      aber lies die aktuellen Bedingungen. Musik ist heikler: nutze nur explizit GEMA-freie,
+      zur kommerziellen Nutzung freigegebene Tracks (YouTube Audio Library / Pixabay Music) und
+      lege sie als <code>~/AuronOrigin/assets/music/*.mp3</code> ab. Ohne Datei wird einfach
+      keine Musik untergemischt — das ist der sichere Default.</div>
+    </div></div>
+
+  <div class="step" data-step="p4-4"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>4.4 Stimme &amp; Sprache</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Stimmen anpassen"><code>nano ~/AuronOrigin/.env
+# TTS_VOICE_EN=en-US-GuyNeural   (Alternativen: en-US-JennyNeural, en-GB-RyanNeural)
+# TTS_VOICE_DE=de-DE-KatjaNeural
+# CONTENT_LANG=de                -> deutsche Spur, gleicher Workflow
+edge-tts --list-voices | grep -E '^(en-US|de-DE)' | head -12
+edge-tts --voice en-US-GuyNeural --text 'AuronOrigin test.' --write-media /tmp/test.mp3</code></pre>
+      <p><code>edge-tts</code> ist kostenlos, aber ein inoffizieller Client — deshalb die
+      Fallback-Kette. Wer komplett offline will: <code>piper</code> installieren und die
+      Modellpfade in <code>PIPER_MODEL_EN/DE</code> eintragen.</p>
+    </div></div>
+
+  <div class="step" data-step="p4-5"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>4.5 Themenliste an deine Marke anpassen</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="worker/topics.json"><code>{{FILE:worker/topics.json}}</code></pre>
+      <p>Die Liste wird bei jedem Lauf weiterrotiert (<code>cache/topic_state.json</code>).
+      Du kannst sie jederzeit um deine eigenen Themen ergänzen — kein Neustart nötig.</p>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="phase5">
+  <div class="sechead"><span class="secnum">8</span><div class="grow">
+    <h2>Phase 5 · n8n-Workflow importieren</h2>
+    <p class="lead">Zwei Cron-Ketten: täglich 06:00 ein Video, montags 05:00 der Wochenplan.</p>
+    <button class="tbtn copyall">⧉ Alle Befehle dieser Phase kopieren</button>
+  </div></div>
+
+  <div class="step" data-step="p5-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>5.1 Platzhalter ersetzen (copy-paste-fertig machen)</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Auf dem 24/7-Laptop — Werte einsetzen"><code>cd ~/Socialmaker5.0
+DELL_IP=100.x.y.z
+TOKEN=DEIN_WORKER_TOKEN
+sed -e "s/DELL_TAILSCALE_IP/$DELL_IP/g" \
+    -e "s/WORKER_TOKEN_HIER_EINTRAGEN/$TOKEN/g" \
+    n8n/workflow.json > ~/AuronOrigin/workflow-fertig.json
+jq -e . ~/AuronOrigin/workflow-fertig.json >/dev/null && echo "JSON ok"</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p5-2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>5.2 In n8n importieren &amp; aktivieren</h3></div></div>
+    <div class="stepbody">
+      <ol><li><code>http://SERVER_IP:5678</code> öffnen → <b>Workflows</b> → <span class="kbd">⋮</span> → <b>Import from File</b>.</li>
+      <li><code>~/AuronOrigin/workflow-fertig.json</code> wählen.</li>
+      <li>Im Node <b>„Worker: Video bauen“</b> prüfen, ob URL und <code>X-Auron-Token</code> stimmen.</li>
+      <li>Rechts oben <b>Active</b> auf <code>ein</code> stellen. Fertig — keine Credentials nötig,
+      weil der Worker per Token und Tailscale angesprochen wird.</li></ol>
+      <pre data-label="n8n/workflow.json (vollständig)"><code>{{FILE:n8n/workflow.json}}</code></pre>
+      <details><summary>Warum keine fertige Telegram-/Upload-Integration?</summary><p>Du hast
+      Privatkonten gewählt. Die 1-Klick-Freigabe läuft deshalb über die lokale
+      <code>/review</code>-Seite — kein Bot, kein Tunnel, kein App-Review, kein Risiko.
+      Telegram-Push ist eine optionale Bonus-Phase, falls du trotzdem eine Benachrichtigung willst.</p></details>
+    </div></div>
+
+  <div class="step" data-step="p5-3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>5.3 Zeiten ändern / mehr Output</h3></div></div>
+    <div class="stepbody">
+      <p>Im Schedule-Node <code>0 6 * * *</code> (täglich 06:00) bzw. <code>0 5 * * 1</code>
+      (Montag 05:00). Für 2 Videos/Tag fügst du einen zweiten Cron mit
+      <code>0 18 * * *</code> hinzu — aber Achtung: jeder Lauf braucht ~10 Min CPU auf dem Dell.</p>
+      <pre data-label="Workflow-Log prüfen"><code>docker logs -f n8n --tail 40
+# In n8n: Executions -> letzter Lauf -> Protokoll-Node zeigt slug, Titel, Dauer</code></pre>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="phase6">
+  <div class="sechead"><span class="secnum">9</span><div class="grow">
+    <h2>Phase 6 · Erster Lauf &amp; 1-Klick-Freigabe</h2>
+    <p class="lead">Jetzt wird es sichtbar: ein komplettes Paket in unter 15 Minuten.</p>
+    <button class="tbtn copyall">⧉ Alle Befehle dieser Phase kopieren</button>
+  </div></div>
+
+  <div class="step" data-step="p6-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>6.1 Ersten Lauf manuell starten (nicht auf 06:00 warten)</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Vom 24/7-Laptop ODER direkt am Dell"><code>curl -sS -X POST http://DELL_IP:8787/run \
+  -H 'Content-Type: application/json' \
+  -H 'X-Auron-Token: DEIN_WORKER_TOKEN' \
+  -d '{"lang":"en"}' | jq .
+# Alternativ in n8n: Workflow öffnen -> "Execute Workflow"</code></pre>
+      <p>Die Antwort enthält <code>slug</code>, <code>duration_seconds</code>,
+      <code>sources</code> und <code>degraded</code>. Bei <code>degraded: true</code> war Ollama
+      nicht erreichbar — das Paket ist trotzdem da, aber mit Notfall-Skript.</p>
+    </div></div>
+
+  <div class="step" data-step="p6-2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>6.2 Prüfen &amp; freigeben — <span class="pill">der eine Klick</span></h3></div></div>
+    <div class="stepbody">
+      <p>Im Browser (am Handy ebenfalls, solange Tailscale an ist):
+      <a href="#" onclick="return false"><code>http://DELL_IP:8787/review</code></a>.
+      Dort: Video ansehen, Token einmal eingeben, <b>✓ Freigeben</b> klicken. Das Paket wandert
+      nach <code>~/AuronOrigin/out/FREIGEGEBEN/&lt;slug&gt;/</code>.</p>
+      <pre data-label="Alternative per Terminal"><code>curl -sS -X POST http://127.0.0.1:8787/approve \
+  -H 'Content-Type: application/json' -H 'X-Auron-Token: DEIN_WORKER_TOKEN' \
+  -d '{"slug":"20261102-0600-why-small-automation-beats-big-ai"}' | jq .
+find ~/AuronOrigin/out/FREIGEGEBEN -maxdepth 2 -type f | sort</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p6-3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>6.3 Was genau im Paket liegt</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Ordnerstruktur"><code>~/AuronOrigin/out/FREIGEGEBEN/20261102-0600-&lt;topic&gt;/
+├── video.mp4           1080x1920, H.264/AAC, ~70 s, gebrannte Untertitel
+├── captions.srt        für YouTube / Facebook / TikTok separat hochladbar
+├── thumbnail.png       Standbild aus Sekunde 2
+├── title.txt           Titel (<= 60 Zeichen)
+├── beschreibung.txt    YouTube-Beschreibung inkl. KI-Hinweis
+├── caption.txt         Hook + Beschreibung + Hashtags (IG / TikTok)
+├── post.txt            kurzer Text für X / Facebook
+├── hashtags.txt
+├── quellen.json        alle Recherche-Treffer mit URL — dein Fact-Check
+├── manifest.json       Dauer, Szenen, Sprache, Status, degraded-Flag
+├── UPLOAD.md           Checkliste inkl. KI-Kennzeichnung je Plattform
+└── FREIGABE.txt        dein Freigabe-Vermerk + fertiger Caption-Text</code></pre>
+    </div></div>
+
+  <div class="step" data-step="p6-4"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>6.4 Der Upload auf deine 5 Kanäle</h3></div></div>
+    <div class="stepbody">
+      <table><tr><th>Plattform</th><th>Dateien</th><th>KI-Kennzeichnung (Pflicht bei realistischen KI-Inhalten)</th></tr>
+      <tr><td><b>YouTube</b> Shorts + Langform</td><td>video.mp4, captions.srt, thumbnail.png, title.txt, beschreibung.txt</td>
+        <td>Studio → Attribute → „AI use“: Ja</td></tr>
+      <tr><td><b>Instagram</b> Reels</td><td>video.mp4, caption.txt</td><td>„Add AI label“ / AI-Disclosure-Tool</td></tr>
+      <tr><td><b>Facebook</b></td><td>video.mp4, post.txt, captions.srt</td><td>Meta AI-Disclosure-Tool</td></tr>
+      <tr><td><b>TikTok</b></td><td>video.mp4 (&gt; 60 s!), caption.txt</td><td>Mehr Optionen → „AI-generated content“ an</td></tr>
+      <tr><td><b>X</b></td><td>post.txt, optional video.mp4</td><td>Hinweis in den Post-Text aufnehmen</td></tr></table>
+      <div class="callout"><b>Workflow-Tipp:</b> Lege dir auf dem Dell einen Ordner
+      <code>~/AuronOrigin/out/FREIGEGEBEN/</code> als Favorit an und arbeite einmal täglich
+      10 Minuten die Uploads ab. Die Reihenfolge YouTube → TikTok → IG → FB → X hat sich bewährt,
+      weil YouTube die Beschreibung + SRT am saubersten verarbeitet.</div>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="geld">
+  <div class="sechead"><span class="secnum v2">10</span><div class="grow">
+    <h2>Von „läuft“ zu „verdient“</h2>
+    <p class="lead">Ad Revenue + Sponsoring ist dein gewählter Weg. Der ehrliche Fahrplan dahin.</p>
+  </div></div>
+
+  <div class="box warn"><h4>Die wichtigste Zahl zuerst</h4><p>Shorts/Creator-Rewards zahlen pro
+    View sehr wenig; selbst Millionen Views ergeben meist nur einen niedrigen dreistelligen Betrag.
+    <b>Das Geld liegt in Langform-Watchtime, Sponsoring und später eigenen Produkten.</b>
+    Wer anderes verspricht, verkauft dir einen Kurs, keine Automation. Die Pipeline ist dein
+    Hebel für Volumen — nicht die Einnahmequelle selbst.</p></div>
+
+  <table>
+    <tr><th>Zeitraum</th><th>Fokus</th><th>Konkret</th><th>Erwartbarer Effekt</th></tr>
+    <tr><td><b>Tag 1–30</b></td><td>Stabilität &amp; Konsistenz</td>
+      <td>1 Video/Tag auf allen 5 Kanälen, Hook-Tests, 3 Säulen messen, welche Topics Watchtime bringen. YPP-Anmeldung vorbereiten.</td>
+      <td>~30 Videos, erste Daten, keine nennenswerten Einnahmen</td></tr>
+    <tr><td><b>Tag 31–90</b></td><td>Watchtime &amp; Langform</td>
+      <td>Zusätzlich 1 Langform-Video (8–12 Min) pro Woche aus denselben Skripten; 4.000 Watch Hours / 1.000 Abos anpeilen — <b>vor</b> dem 01.02.2027, weil die Hürde für Neuanmeldungen dann steigt.</td>
+      <td>YPP-Fähigkeit, erste Sponsor-Anfragen ab ~50k Views/Monat</td></tr>
+    <tr><td><b>Tag 90–180</b></td><td>Sponsoring &amp; Marke</td>
+      <td>Media-Kit auf <a href="https://auronorigin.world" target="_blank">auronorigin.world</a>, 3–5 Pitches/Woche, feste Integrations-Pakete, Cloudflare-Analytics für Nachweise.</td>
+      <td>Erste bezahlte Integrationen — meist der größte Sprung</td></tr>
+    <tr><td><b>ab Tag 180</b></td><td>Skalierung</td>
+      <td>DE-Spur, zweite Nische, eigene digitale Produkte / Affiliate als drittes Standbein, ggf. Virtual Assistant für Uploads.</td>
+      <td>Wiederkehrender Umsatz statt reiner Plattform-Abhängigkeit</td></tr>
+  </table>
+
+  <div class="grid">
+    <div class="box"><h4>YouTube Partner Programm</h4><p>Aktuell: 1.000 Abos + 4.000 öffentliche
+      Watch Hours/12 Monate <i>oder</i> 10 Mio. qualifizierte Shorts-Views/90 Tage. Ab
+      01.02.2027 für neue Bewerber: 8.000 Std. bzw. 20 Mio. Views. Fan-Funding-Stufe schon ab
+      500 Abos. → Langform ist der effizientere Weg.</p></div>
+    <div class="box"><h4>TikTok Creator Rewards</h4><p>10.000 Follower, 100.000 Views/30 Tage
+      und <b>Videos über 1 Minute</b>. Ein 59-Sekunden-Clip verdient dort nichts. Genau deshalb
+      ist <code>TARGET_SECONDS=70</code> die Default-Einstellung.</p></div>
+    <div class="box"><h4>Sponsoring</h4><p>Tech-/SaaS-Themen sind die gesuchtesten Nischen für
+      Integrations. Entscheidend sind nicht Abos, sondern <i>belegbare</i> Views + saubere
+      Zielgruppe. Ein Media-Kit mit Screenshots aus Cloudflare Analytics reicht am Anfang.</p></div>
+  </div>
+
+  <div class="step" data-step="g1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>Sponsor-Pitch (copy-paste, einmal anpassen)</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="E-Mail-Vorlage"><code>Betreff: Integration für [Marke] – AuronOrigin Shorts + Langform
+
+Hallo [Name],
+
+ich betreibe AuronOrigin (auronorigin.world): erklärende Kurzvideos und
+wöchentliche Langform-Videos zu KI, Software und digitalen Systemen für
+Solo-Unternehmer.
+
+Eckdaten (Stand [Datum]):
+- [X] Videos veröffentlicht, [Y] Views / 30 Tage, [Z] % durchschnittliche Watchtime
+- Zielgruppe: Selbstständige, Freelancer, Tech-Entscheider, DACH + US/UK
+- Format: 70-Sekunden-Shorts auf YouTube, TikTok, IG, FB, X + 8–12 Min Langform
+
+Ich biete eine native Integration (30–45 s, klar gekennzeichnet, ohne
+Werbeversprechen meinerseits) inkl. Performance-Report nach 14 Tagen.
+Preis: [Betrag] € netto für [Paket]. Media-Kit hängt an.
+
+Passt das zu eurer Q1-Planung? Ich schicke gern 2 Skript-Entwürfe zur Ansicht.
+
+Viele Grüße
+[Dein Name] · AuronOrigin · [Gewerbe / USt-IdNr.]</code></pre>
+    </div></div>
+
+  <div class="step" data-step="g2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>Cloudflare &amp; Website sinnvoll nutzen (0 €)</h3></div></div>
+    <div class="stepbody">
+      <ul><li><b>Link-in-Bio:</b> eine schlanke Seite <code>/links</code> auf
+        auronorigin.world mit allen 5 Kanälen + Sponsor-Kontakt. In jeder Bio verlinken.</li>
+      <li><b>Cloudflare Web Analytics</b> (kostenlos, cookiefrei): Traffic der Website und
+        Klickzahlen auf Sponsor-Links nachweisbar machen.</li>
+      <li><b>UTM-Parameter</b> in <code>caption.txt</code> für eigene Links — so siehst du,
+        welche Plattform wirklich konvertiert.</li>
+      <li><b>Media-Kit</b> als statische Seite, kein Baukasten nötig: Zahlen + Formate + Kontakt.</li></ul>
+    </div></div>
+
+  <div class="step" data-step="g3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>Kleingewerbe: sauber statt teuer</h3></div></div>
+    <div class="stepbody">
+      <ul><li>Prüfen, ob deine Gewerbeanmeldung „Content-Produktion / Online-Marketing /
+        digitale Dienstleistungen“ mit abdeckt — sonst kurz beim Gewerbeamt erweitern.</li>
+      <li>Einnahmen aus Plattformen (oft Irland/USA) und Sponsoring sauber in der EÜR erfassen;
+        Kleinunternehmerregelung, Reverse Charge, OSS und Umsatzgrenzen <b>mit Steuerberater
+        klären</b> — das ist kein Rechts-/Steuerrat, nur die Checkliste.</li>
+      <li>Rechnungsvorlage mit USt-IdNr. / Kleinunternehmer-Hinweis bereithalten, bevor die erste
+        Integration kommt.</li>
+      <li>Impressum + Datenschutzerklärung auf auronorigin.world aktuell halten (Cloudflare
+        als Hosting/CDN benennen,ggf. Analytics-Hinweis).</li></ul>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="recht">
+  <div class="sechead"><span class="secnum v2">11</span><div class="grow">
+    <h2>Recht &amp; KI-Kennzeichnung</h2>
+    <p class="lead">Seit 02.08.2026 ist das kein „nice to have“ mehr. Bitte einmal bewusst durchgehen.</p>
+  </div></div>
+
+  <div class="box warn"><h4>EU AI Act, Artikel 50</h4><p>Die Transparenzpflichten für
+    Anbieter und Betreiber generativer KI gelten seit dem <b>2. August 2026</b>: maschinenlesbare
+    Kennzeichnung von KI-Outputs und sichtbare Offenlegung bei Deepfakes bzw. KI-erzeugten
+    Inhalten. Die EU-Kommission hat dazu einen Code of Practice veröffentlicht. Für dich als
+    Veröffentlicher heißt das praktisch: <b>immer kennzeichnen, wenn etwas realistisch wirkt.</b>
+    Keine Rechtsberatung — im Zweifel anwaltlich prüfen.</p></div>
+
+  <table>
+    <tr><th>Plattform</th><th>Wo</th><th>Label</th></tr>
+    <tr><td>YouTube</td><td>Studio → Attribute → „AI use“: Ja</td><td>„Altered or synthetic content“</td></tr>
+    <tr><td>TikTok</td><td>Mehr Optionen vor dem Post → Toggle</td><td>„Creator labeled as AI-generated“</td></tr>
+    <tr><td>Instagram / Facebook</td><td>AI-Disclosure-Tool beim Teilen</td><td>„AI info“</td></tr>
+    <tr><td>X</td><td>Transparenter Hinweis im Post-Text</td><td>eigener Hinweis</td></tr>
+  </table>
+  <p><small>Reine Skript-Hilfe oder offensichtlich stilisierte Grafiken lösen die Pflicht in der
+  Regel nicht aus — eine <b>realistisch klingende KI-Stimme über realistischem Bildmaterial</b>
+  aber schon. Die Labels senken laut Plattformangaben die Reichweite nicht. Quellen siehe Kapitel 15.</small></p>
+
+  <div class="step" data-step="l1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>Checkliste vor JEDEM Upload</h3></div></div>
+    <div class="stepbody"><ul>
+      <li>KI-Label auf der jeweiligen Plattform gesetzt (Tabelle oben).</li>
+      <li>Hinweis in <code>beschreibung.txt</code> / <code>UPLOAD.md</code> übernommen.</li>
+      <li>Keine echten Personen, Stimmen oder Zitate imitiert — keine Deepfakes.</li>
+      <li><code>quellen.json</code> geprüft: keine erfundenen Zahlen, Daten, Namen im Skript.</li>
+      <li>Musik nur aus explizit kommerziell freigegebenen, GEMA-freien Quellen (oder gar keine).</li>
+      <li>Stock-Clips: Lizenzbedingungen von Pexels/Pixabay eingehalten.</li>
+      <li>Bei Werbung/Sponsoring: Kennzeichnung als Werbung + Impressum/Pflichtangaben.</li>
+    </ul></div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="bonus">
+  <div class="sechead"><span class="secnum v2">12</span><div class="grow">
+    <h2>Bonus-Phasen (erst, wenn Phase 6 stabil läuft)</h2>
+    <p class="lead">Alles optional. Nichts davon kostet Geld.</p>
+  </div></div>
+
+  <div class="step" data-step="b1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>B1 · n8n über deine Cloudflare-Domain erreichbar</h3></div></div>
+    <div class="stepbody">
+      <p>Du hast auronorigin.world bereits auf Cloudflare — ein Tunnel ist kostenlos und ersetzt
+      Portweiterleitung. <b>Achtung:</b> Danach n8n zusätzlich mit Cloudflare Access (Free-Tier)
+      schützen; Webhook-Pfade ggf. auf Bypass setzen.</p>
+      <pre data-label="24/7-Laptop"><code>curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg \
+  | sudo gpg --dearmor -o /usr/share/keyrings/cloudflare-main.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main" \
+  | sudo tee /etc/apt/sources.list.d/cloudflared.list
+sudo apt update && sudo apt install -y cloudflared
+cloudflared tunnel login
+cloudflared tunnel create auron-n8n
+cloudflared tunnel route dns auron-n8n n8n.auronorigin.world
+mkdir -p ~/.cloudflared && nano ~/.cloudflared/config.yml</code></pre>
+      <pre data-label="~/.cloudflared/config.yml"><code>tunnel: TUNNEL_ID_AUS__cloudflared_tunnel_list
+credentials-file: /home/DEINUSER/.cloudflared/TUNNEL_ID.json
+ingress:
+  - hostname: n8n.auronorigin.world
+    service: http://localhost:5678
+  - service: http_status:404</code></pre>
+      <pre data-label="Aktivieren"><code>sudo cloudflared service install && sudo systemctl start cloudflared
+# In ~/AuronOrigin/n8n/.env setzen:
+# N8N_HOST=n8n.auronorigin.world
+# N8N_PROTOCOL=https
+# WEBHOOK_URL=https://n8n.auronorigin.world/
+cd ~/AuronOrigin/n8n && docker compose up -d --force-recreate</code></pre>
+    </div></div>
+
+  <div class="step" data-step="b2"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>B2 · Telegram-Push „neuer Entwurf da“</h3></div></div>
+    <div class="stepbody">
+      <p>Bot kostenlos bei <span class="kbd">@BotFather</span> anlegen, Chat-ID über
+      <span class="kbd">@userinfobot</span>. In n8n einen <b>HTTP Request</b>-Node nach
+      „Protokoll“ hängen:</p>
+      <pre data-label="HTTP-Request-Node in n8n"><code>POST https://api.telegram.org/bot&lt;TOKEN&gt;/sendMessage
+Body (JSON):
+{"chat_id":"&lt;CHAT_ID&gt;",
+ "text":"Neuer AuronOrigin-Entwurf: {{ $json.title }} ({{ $json.seconds }} s)",
+ "reply_markup":{"inline_keyboard":[[{"text":"Freigabe öffnen",
+   "url":"http://DELL_IP:8787/review"}]]}}</code></pre>
+      <p>Alternativ simpel per Cron auf dem Dell:</p>
+      <pre data-label="Cron-Benachrichtigung"><code>curl -sS "https://api.telegram.org/bot$TOKEN/sendMessage" \
+  -d chat_id="$CHAT_ID" \
+  --data-urlencode "text=$(ls -1 ~/AuronOrigin/out/ENTWURF | wc -l) Entwürfe warten: http://$(tailscale ip -4):8787/review"</code></pre>
+    </div></div>
+
+  <div class="step" data-step="b3"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>B3 · Wortgenaue „Karaoke“-Untertitel</h3></div></div>
+    <div class="stepbody">
+      <p><code>faster-whisper</code> mit dem <code>tiny</code>-Modell (~75 MB) läuft auf der CPU
+      und liefert Wort-Timestamps aus deinem eigenen TTS-Audio. Ersetze damit
+      <code>render.write_srt</code> — das gebrannte Overlay bleibt unverändert.</p>
+      <pre data-label="Optional"><code>~/AuronOrigin/.venv/bin/pip install faster-whisper
+~/AuronOrigin/.venv/bin/python -c "from faster_whisper import WhisperModel; \
+WhisperModel('tiny', device='cpu', compute_type='int8'); print('ok')"</code></pre>
+    </div></div>
+
+  <div class="step" data-step="b4"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>B4 · Langform-Schiene (der eigentliche Geldhebel)</h3></div></div>
+    <div class="stepbody">
+      <p>In <code>worker/pipeline.py</code> den Prompt von „exactly 8 scenes / 150–190 words“ auf
+      „exactly 36 scenes / 1.300–1.600 words“ ändern und <code>SYSTEM_PROMPT</code> um
+      Kapitelstruktur ergänzen; <code>TARGET_SECONDS=600</code>. Der Renderer macht den Rest
+      automatisch. Alternativ: 5 Shorts zu einem Thema zusammenfügen + 2 Min Moderation.</p>
+      <pre data-label="Schnell testen, ohne Code zu ändern"><code>grep -n 'exactly 8 scenes\|150-190' ~/AuronOrigin/worker/pipeline.py
+sed -i 's/exactly 8 scenes/exactly 36 scenes/; s/150-190 words/1300-1600 words/' \
+  ~/AuronOrigin/worker/pipeline.py
+sudo systemctl restart auron-worker
+# Danach: TARGET_SECONDS=600 in der .env, /run erneut aufrufen</code></pre>
+    </div></div>
+
+  <div class="step" data-step="b5"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>B5 · Backup &amp; Aufräumen</h3></div></div>
+    <div class="stepbody">
+      <pre data-label="Täglich 03:00 auf dem 24/7-Laptop (crontab -e)"><code>0 3 * * * rsync -a --delete USER@DELL_IP:~/AuronOrigin/out/ ~/AuronOrigin/backup/out/ 2>>~/AuronOrigin/logs/backup.log
+0 4 * * * find ~/AuronOrigin/out/FREIGEGEBEN -type f -mtime +60 -name '*.mp4' -delete
+0 4 * * * docker exec n8n n8n export:workflow --all --output=/home/node/.n8n/backup/ 2>/dev/null || true</code></pre>
+      <p><b>Speicher:</b> ~70 s H.264 bei CRF 23 sind ~8–20 MB. 30 Videos/Monat ≈ 0,5 GB.
+      Deine 512 GB reichen jahrelang — aber lösche <code>cache/</code> und alte Pakete.</p>
+    </div></div>
+
+  <div class="step" data-step="b6"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
+    <div class="grow"><h3>B6 · Dell automatisch wecken</h3></div></div>
+    <div class="stepbody">
+      <p>Falls der Dell nachts aus sein soll: <code>rtcwake</code> oder Wake-on-LAN vom
+      24/7-Laptop, 10 Minuten vor dem Cron.</p>
+      <pre data-label="24/7-Laptop, Cron 05:50"><code>50 5 * * * wakeonlan DELL_MAC_ADRESSE
+# oder auf dem Dell selbst:
+sudo rtcwake -m no -t $(date -d 'tomorrow 05:55' +%s)</code></pre>
+    </div></div>
+</section>
+
+<!-- ==================================================================== -->
+<section id="fehler">
+  <div class="sechead"><span class="secnum v2">13</span><div class="grow">
+    <h2>Stolpersteine &amp; Sofort-Fixes</h2>
+    <p class="lead">Die Fehler, die bei genau dieser Hardware wirklich auftreten.</p>
+  </div></div>
+  <table>
+    <tr><th>Symptom</th><th>Ursache</th><th>Fix (kopieren)</th></tr>
+    <tr><td><code>/run</code> → 500 „Ollama nicht erreichbar“</td><td>Ollama-Service down oder Modell nicht geladen</td>
+      <td><code>sudo systemctl restart ollama &amp;&amp; ollama pull qwen2.5:7b-instruct</code></td></tr>
+    <tr><td>Antwort dauert &gt; 5 Min</td><td>7B auf CPU, langer Kontext</td>
+      <td><code>OLLAMA_FAST_MODEL=llama3.2:3b</code> für Planung; <code>num_ctx=4096</code> nicht erhöhen; <code>num_thread=10</code></td></tr>
+    <tr><td>n8n startet neu / OOM</td><td>5 GB RAM, kein Swap</td>
+      <td><code>free -h; swapon --show; docker update --memory=900m n8n</code></td></tr>
+    <tr><td>n8n aus der Ferne nicht erreichbar</td><td>Compose bindet auf 127.0.0.1 (Absicht!)</td>
+      <td>über Tailscale: <code>http://SERVER_IP:5678</code> klappt nur, wenn Port auf 0.0.0.0 gebunden ist — entweder Compose-Port auf <code>"5678:5678"</code> ändern oder SSH-Tunnel: <code>ssh -L 5678:localhost:5678 USER@SERVER_IP</code></td></tr>
+    <tr><td><code>drawtext</code> / Font-Fehler im Render</td><td>fonts-dejavu-core fehlt</td>
+      <td><code>sudo apt install -y fonts-dejavu-core; ls /usr/share/fonts/truetype/dejavu/</code></td></tr>
+    <tr><td>Untertitel enthalten seltsame Zeichen</td><td>drawtext expandiert <code>%</code></td>
+      <td>schon gelöst: <code>render.py</code> doppelt Prozentzeichen</td></tr>
+    <tr><td>Video stumm oder zu kurz</td><td>TTS-Fallback lieferte 0 s</td>
+      <td><code>ffprobe -v error -show_entries format=duration ~/AuronOrigin/out/ENTWURF/*/video.mp4; sudo apt install -y espeak-ng</code></td></tr>
+    <tr><td>Concat-Fehler „non-monotonous DTS“</td><td>Szenen mit abweichenden Codec-Parametern</td>
+      <td>alle Szenen werden identisch encodiert; ggf. <code>cache/</code> leeren und erneut <code>/run</code></td></tr>
+    <tr><td>Keine Stock-Clips im Video</td><td>kein/erschöpfter Pexels-Key</td>
+      <td>erwartbar → Titelkarten. <code>curl -sS localhost:8787/health | jq .pexels_key</code></td></tr>
+    <tr><td>Token-Fehler 401 in der Review-Seite</td><td>Token nicht gespeichert</td>
+      <td>Token aus <code>~/AuronOrigin/.env</code> kopieren, oben einfügen, „Token speichern“</td></tr>
+    <tr><td>Festplatte voll</td><td>alte Pakete + cache</td>
+      <td><code>du -sh ~/AuronOrigin/{out,cache}; rm -rf ~/AuronOrigin/cache/*</code></td></tr>
+    <tr><td>Modell halluziniert Zahlen</td><td>Leere Recherche + zu hohe Temperature</td>
+      <td><code>temperature: 0.72 → 0.5</code> in <code>pipeline.py</code>, <code>quellen.json</code> prüfen, Brave-Key setzen</td></tr>
+  </table>
+  <pre data-label="Der Universal-Diagnose-Befehl"><code>echo "--- Dell ---"; systemctl is-active ollama auron-worker; curl -sS localhost:8787/health | jq .
+echo "--- Server ---"; docker ps --format '{{.Names}} {{.Status}}'; curl -sS localhost:5678/healthz; echo
+echo "--- Netz ---"; tailscale status; sudo ufw status | head -12
+echo "--- Logs ---"; sudo journalctl -u auron-worker -n 25 --no-pager; docker logs n8n --tail 25</code></pre>
+</section>
+
+<!-- ==================================================================== -->
+<section id="dateien">
+  <div class="sechead"><span class="secnum v2">14</span><div class="grow">
+    <h2>Alle Dateien im Repo</h2>
+    <p class="lead">Der Plan oben zeigt exakt diese Inhalte — keine versteckten Abweichungen.</p>
+  </div></div>
+  <table>
+    <tr><th>Datei</th><th>Zweck</th></tr>
+    <tr><td><a href="index.html">index.html</a></td><td>Dieser Plan (generiert, klickbar, offlinefähig)</td></tr>
+    <tr><td><a href="src/plan.template.html">src/plan.template.html</a></td><td>Quell-Template</td></tr>
+    <tr><td><a href="tools/build_plan.py">tools/build_plan.py</a></td><td><code>python3 tools/build_plan.py</code> baut index.html neu</td></tr>
+    <tr><td><a href="README.md">README.md</a></td><td>Kurzfassung für das Repo</td></tr>
+    <tr><td><a href="setup/00-both-machines.sh">setup/00-both-machines.sh</a></td><td>Phase 0 — beide Rechner</td></tr>
+    <tr><td><a href="setup/01-dell-ollama.sh">setup/01-dell-ollama.sh</a></td><td>Phase 1 — Ollama, Modelle, ufw</td></tr>
+    <tr><td><a href="setup/02-server-n8n.sh">setup/02-server-n8n.sh</a></td><td>Phase 2 — Swap, Docker, n8n</td></tr>
+    <tr><td><a href="setup/03-worker.sh">setup/03-worker.sh</a></td><td>Phase 3 — venv, Worker, systemd</td></tr>
+    <tr><td><a href="config/ollama-override.conf">config/ollama-override.conf</a></td><td>Ollama systemd-Drop-in</td></tr>
+    <tr><td><a href="config/docker-compose.yml">config/docker-compose.yml</a></td><td>n8n speicherbewusst</td></tr>
+    <tr><td><a href="config/env.example">config/env.example</a></td><td>.env-Vorlage</td></tr>
+    <tr><td><a href="systemd/auron-worker.service">systemd/auron-worker.service</a></td><td>Autostart des Workers</td></tr>
+    <tr><td><a href="worker/requirements.txt">worker/requirements.txt</a></td><td>Python-Abhängigkeiten</td></tr>
+    <tr><td><a href="worker/settings.py">worker/settings.py</a></td><td>Konfiguration/Pfade</td></tr>
+    <tr><td><a href="worker/sources.py">worker/sources.py</a></td><td>RSS, Brave, Pexels</td></tr>
+    <tr><td><a href="worker/voice.py">worker/voice.py</a></td><td>TTS mit 3 Fallbacks</td></tr>
+    <tr><td><a href="worker/render.py">worker/render.py</a></td><td>Karten, Szenen, FFmpeg, SRT</td></tr>
+    <tr><td><a href="worker/pipeline.py">worker/pipeline.py</a></td><td>Orchestrierung + Freigabe</td></tr>
+    <tr><td><a href="worker/app.py">worker/app.py</a></td><td>API + /review-Oberfläche</td></tr>
+    <tr><td><a href="worker/topics.json">worker/topics.json</a></td><td>24 rotierende Themen</td></tr>
+    <tr><td><a href="n8n/workflow.json">n8n/workflow.json</a></td><td>Importierbarer Workflow</td></tr>
+  </table>
+  <pre data-label="Plan nach eigenen Änderungen neu bauen"><code>cd ~/Socialmaker5.0
+python3 tools/build_plan.py
+python3 -m http.server 3000 --bind 0.0.0.0   # dann http://SERVER_IP:3000</code></pre>
+</section>
+
+<!-- ==================================================================== -->
+<section id="quellen">
+  <div class="sechead"><span class="secnum v2">15</span><div class="grow">
+    <h2>Quellen (Stand {{DATE}})</h2>
+    <p class="lead">Regeln und Schwellenwerte ändern sich — vor Monetarisierungs-Entscheidungen
+    immer noch einmal die offiziellen Hilfeseiten prüfen.</p>
+  </div></div>
+  <ol>
+    <li><a href="https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content" target="_blank">EU-Kommission: Code of Practice on Transparency of AI-generated Content (Art. 50 AI Act, anwendbar seit 02.08.2026)</a></li>
+    <li><a href="https://appleworld.today/2026/10/youtube-tiktok-and-instagram-monetization-requirements-in-2026-how-close-is-your-account-to-getting-paid/" target="_blank">YPP- und TikTok-Schwellenwerte 2026 (1.000 Abos / 4.000 Std. / 10 Mio. Views; 10.000 Follower / 100.000 Views)</a></li>
+    <li><a href="https://blogherald.com/global/n-tiktok-youtube-creator-payout-changes/" target="_blank">YPP-Verschärfung ab 01.02.2027 (8.000 Std. / 20 Mio. Views) und TikTok-1-Minuten-Regel</a></li>
+    <li><a href="https://vidova.ai/blog/how-long-should-a-tiktok-or-youtube-short-be" target="_blank">TikTok Creator Rewards zählt nur Videos ab 1 Minute</a></li>
+    <li><a href="https://www.binai.it/en/blog/do-you-have-to-disclose-ai-content" target="_blank">Plattform-Kennzeichnung YouTube / TikTok / Meta im Vergleich</a></li>
+    <li><a href="https://kompozy.io/guides/ai-content-labeling" target="_blank">KI-Labels, C2PA-Provenienz und EU-Pflichten 2026</a></li>
+    <li><a href="https://apicostcalc.com/brave-search.html" target="_blank">Brave Search API: Free-Tier 2.000 Queries/Monat, 1 Query/s</a></li>
+    <li><a href="https://wotai.co/blog/n8n-self-hosting-requirements" target="_blank">n8n Self-Hosting: 1 GB Minimum, 2–4 GB empfohlen, SQLite für Einzeluser</a></li>
+    <li><a href="https://getflowkit.fr/en/blog/n8n-ollama-llm-local-sans-cle-api" target="_blank">7–8B-Modelle (Qwen2.5 / Llama 3.1 / Mistral) auf 16 GB CPU-RAM</a></li>
+  </ol>
+  <footer>
+    <p><b>AuronOrigin · 0-€-Autonomie-Plan</b> · erstellt am {{DATE}} · Branch
+    <code>arena/ede4bccb-socialmaker5-0</code>.</p>
+    <p>Dieser Plan ist technische Arbeitsanleitung, keine Rechts-, Steuer- oder
+    Anlageberatung. Plattformregeln, Monetarisierungsbedingungen und KI-Kennzeichnungspflichten
+    können sich ändern — bitte vor dem Veröffentlichen selbst gegenprüfen.</p>
+  </footer>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const KEY = "auronorigin-plan-v1";
+  const steps = Array.from(document.querySelectorAll(".step"));
+  const boxes = steps.map(s => s.querySelector('input[type="checkbox"]'));
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { saved = {}; }
+
+  function progress(){
+    const done = boxes.filter(b => b.checked).length;
+    document.getElementById("prog").style.width = (100*done/Math.max(boxes.length,1)) + "%";
+    document.getElementById("progtxt").textContent = done + " / " + boxes.length + " erledigt";
+  }
+  steps.forEach((s,i) => {
+    const id = s.dataset.step || ("s"+i);
+    if (saved[id]) { boxes[i].checked = true; s.classList.add("done"); }
+    boxes[i].addEventListener("change", () => {
+      s.classList.toggle("done", boxes[i].checked);
+      saved[id] = boxes[i].checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e) {}
+      progress();
+    });
+  });
+  progress();
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    if (!confirm("Fortschritt wirklich löschen?")) return;
+    saved = {}; try { localStorage.removeItem(KEY); } catch(e) {}
+    boxes.forEach(b => b.checked=false);
+    steps.forEach(s => s.classList.remove("done"));
+    progress();
+  });
+  document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+  const search = document.getElementById("search");
+  search.addEventListener("input", () => {
+    const q = search.value.trim().toLowerCase();
+    steps.forEach(s => s.style.display = (!q || s.textContent.toLowerCase().includes(q)) ? "" : "none");
+  });
+
+  // ---- Copy-Buttons für jeden Codeblock ----
+  function flash(btn, ok){
+    const old = btn.textContent;
+    btn.textContent = ok ? "✓ Kopiert" : "✕ Fehler";
+    btn.classList.toggle("ok", ok);
+    setTimeout(() => { btn.textContent = old; btn.classList.remove("ok"); }, 1600);
+  }
+  function copyText(text, btn){
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(()=>flash(btn,true),()=>fallback());
+    } else fallback();
+    function fallback(){
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      let ok=false; try { ok = document.execCommand("copy"); } catch(e) {}
+      document.body.removeChild(ta); flash(btn, ok);
+    }
+  }
+  document.querySelectorAll("pre").forEach(pre => {
+    const code = pre.querySelector("code") || pre;
+    const wrap = document.createElement("div"); wrap.className="codewrap";
+    const head = document.createElement("div"); head.className="codehead";
+    const label = document.createElement("span");
+    label.textContent = pre.dataset.label || "Befehle / Datei";
+    const btn = document.createElement("button");
+    btn.className="copybtn"; btn.type="button"; btn.textContent="⧉ Kopieren";
+    btn.addEventListener("click", e => { e.stopPropagation(); copyText(code.textContent, btn); });
+    head.appendChild(label); head.appendChild(btn);
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(head); wrap.appendChild(pre);
+  });
+  document.querySelectorAll("button.copyall").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const sec = btn.closest("section");
+      const parts = Array.from(sec.querySelectorAll("pre code")).map(c => c.textContent.trim());
+      copyText(parts.join("\n\n# -------- nächster Block --------\n\n"), btn);
+    });
+  });
+
+  document.getElementById("toggleDetails").addEventListener("click", (e) => {
+    const all = Array.from(document.querySelectorAll("details"));
+    const open = all.some(d => !d.open);
+    all.forEach(d => d.open = open);
+    e.target.textContent = open ? "Alle Details ▴" : "Alle Details ▾";
+  });
+
+  // ---- Ideen-Generator ----
+  const ideas = [
+    "Warum ein 7B-Modell auf 16 GB RAM mehr bringt als ein größeres in der Cloud",
+    "Was n8n wirklich spart: 7 wiederkehrende Entscheidungen pro Woche",
+    "Die 70-Sekunden-Regel: warum 59 Sekunden kein Geld verdienen",
+    "Wie RSS jede Plattform überlebt hat — und was du daraus lernst",
+    "Warum deine Backups die wichtigste Automation sind",
+    "CPU vs. GPU: was ein i5-1235U tatsächlich leisten kann",
+    "Ein 0-€-Tech-Stack für ein digitales Kleingewerbe",
+    "Wie du eine KI-Antwort prüfst, bevor du sie veröffentlichst",
+    "Warum Evergreen-Themen Zinsen zahlen und News verfällt",
+    "Der echte Grund, warum Tools nach Woche zwei liegen bleiben",
+    "Warum Untertitel entscheiden, ob ein Video gesehen wird",
+    "Was ein Prompt können muss, damit valides JSON herauskommt",
+    "Sponsoring für kleine Kanäle: wie die erste Anfrage wirklich entsteht",
+    "Warum Klartextdateien jede App überleben",
+    "Die Ökonomie einer Ein-Personen-Medienfirma",
+    "Was sich änderte, als Suche zu einem Feed wurde"
+  ];
+  const ideaBox = document.getElementById("ideaBox");
+  document.getElementById("ideaBtn").addEventListener("click", () => {
+    ideaBox.textContent = "💡 " + ideas[Math.floor(Math.random()*ideas.length)];
+  });
+  document.getElementById("copyIdea").addEventListener("click", (e) => {
+    copyText(ideaBox.textContent, e.target);
+  });
+
+  // ---- Aktive Navigation ----
+  const links = Array.from(document.querySelectorAll("nav a"));
+  if ("IntersectionObserver" in window){
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting){
+          links.forEach(a => a.classList.toggle("active",
+            a.getAttribute("href") === "#" + en.target.id));
+        }
+      });
+    }, {rootMargin:"-90px 0px -70% 0px", threshold:0});
+    document.querySelectorAll("section, .hero").forEach(s => obs.observe(s));
+  }
+})();
+</script>
+</body>
+</html>

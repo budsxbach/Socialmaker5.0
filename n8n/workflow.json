@@ -1,0 +1,102 @@
+{
+  "name": "AuronOrigin | Content-Pipeline v1",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [ { "field": "cronExpression", "expression": "0 6 * * *" } ] }
+      },
+      "id": "a1000000-0000-4000-8000-000000000001",
+      "name": "Taeglich 06:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://DELL_TAILSCALE_IP:8787/run",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "X-Auron-Token", "value": "WORKER_TOKEN_HIER_EINTRAGEN" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"lang\": \"en\"}",
+        "options": { "timeout": 900000 }
+      },
+      "id": "a1000000-0000-4000-8000-000000000002",
+      "name": "Worker: Video bauen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $input.first().json;\nreturn [{ json: { ok: true, slug: r.slug, title: r.title, seconds: r.duration_seconds, note: r.note, review: 'http://DELL_TAILSCALE_IP:8787/review' } }];"
+      },
+      "id": "a1000000-0000-4000-8000-000000000003",
+      "name": "Protokoll",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {},
+      "id": "a1000000-0000-4000-8000-000000000004",
+      "name": "Fertig - Review oeffnen",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [700, 0]
+    },
+    {
+      "parameters": {
+        "rule": { "interval": [ { "field": "cronExpression", "expression": "0 5 * * 1" } ] }
+      },
+      "id": "a1000000-0000-4000-8000-000000000005",
+      "name": "Montag 05:00 Wochenplan",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 240]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://DELL_TAILSCALE_IP:8787/plan",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "X-Auron-Token", "value": "WORKER_TOKEN_HIER_EINTRAGEN" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"lang\": \"en\"}",
+        "options": { "timeout": 300000 }
+      },
+      "id": "a1000000-0000-4000-8000-000000000006",
+      "name": "Worker: Wochenplan",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 240]
+    },
+    {
+      "parameters": {},
+      "id": "a1000000-0000-4000-8000-000000000007",
+      "name": "Plan gespeichert",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [480, 240]
+    }
+  ],
+  "connections": {
+    "Taeglich 06:00": { "main": [ [ { "node": "Worker: Video bauen", "type": "main", "index": 0 } ] ] },
+    "Worker: Video bauen": { "main": [ [ { "node": "Protokoll", "type": "main", "index": 0 } ] ] },
+    "Protokoll": { "main": [ [ { "node": "Fertig - Review oeffnen", "type": "main", "index": 0 } ] ] },
+    "Montag 05:00 Wochenplan": { "main": [ [ { "node": "Worker: Wochenplan", "type": "main", "index": 0 } ] ] },
+    "Worker: Wochenplan": { "main": [ [ { "node": "Plan gespeichert", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Europe/Berlin" },
+  "pinData": {}
+}
