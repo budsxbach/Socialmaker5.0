@@ -226,7 +226,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 0;color:var(--dim);font-s
   </div>
   <div class="quick">
     <b>Schnellstart · 4 Zeilen</b>
-    <pre data-label="Auf BEIDEN Laptops"><code>git clone -b arena/ede4bccb-socialmaker5-0 https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
+    <pre data-label="Auf BEIDEN Laptops"><code>git clone https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
 bash ~/Socialmaker5.0/setup/00-both-machines.sh     # auf beiden
 sudo tailscale up                                    # einmalig je Gerät, Browser-Login
 # danach: Phase 1 auf dem Dell, Phase 2 auf dem 24/7-Laptop</code></pre>
@@ -362,9 +362,9 @@ sudo tailscale up                                    # einmalig je Gerät, Brows
   <div class="step" data-step="p0-1"><div class="stephead"><label class="tick"><input type="checkbox"><span></span></label>
     <div class="grow"><h3>0.1 Repo auf BEIDE Laptops holen</h3></div></div>
     <div class="stepbody">
-      <p>Alles liegt auf dem Branch dieser Sitzung. Alternativ: einmal klonen und per
+      <p>Alles liegt jetzt im Hauptbranch <code>main</code> (nach dem Merge). Alternativ: einmal klonen und per
       <code>scp -r ~/Socialmaker5.0 USER@TAILSCALE_IP:~/</code> auf den zweiten Rechner kopieren.</p>
-      <pre data-label="Beide Laptops"><code>git clone -b arena/ede4bccb-socialmaker5-0 https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
+      <pre data-label="Beide Laptops"><code>git clone https://github.com/budsxbach/Socialmaker5.0.git ~/Socialmaker5.0
 cd ~/Socialmaker5.0 && ls -R | head -40</code></pre>
     </div></div>
 
@@ -2396,7 +2396,7 @@ python3 -m http.server 3000 --bind 0.0.0.0   # dann http://SERVER_IP:3000</code>
   </ol>
   <footer>
     <p><b>AuronOrigin · 0-€-Autonomie-Plan</b> · erstellt am 02.11.2026 · Branch
-    <code>arena/ede4bccb-socialmaker5-0</code>.</p>
+    <code>main</code>.</p>
     <p>Dieser Plan ist technische Arbeitsanleitung, keine Rechts-, Steuer- oder
     Anlageberatung. Plattformregeln, Monetarisierungsbedingungen und KI-Kennzeichnungspflichten
     können sich ändern — bitte vor dem Veröffentlichen selbst gegenprüfen.</p>
