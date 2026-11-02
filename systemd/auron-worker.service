@@ -1,0 +1,21 @@
+[Unit]
+Description=AuronOrigin Content Worker (Ollama -> TTS -> FFmpeg -> Freigabe)
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=DEINUSER
+WorkingDirectory=/home/DEINUSER/AuronOrigin/worker
+EnvironmentFile=/home/DEINUSER/AuronOrigin/.env
+ExecStart=/home/DEINUSER/AuronOrigin/.venv/bin/python -m uvicorn app:app --host 0.0.0.0 --port 8787 --timeout-keep-alive 900
+Restart=on-failure
+RestartSec=10
+Nice=10
+CPUQuota=85%
+MemoryMax=6G
+StandardOutput=append:/home/DEINUSER/AuronOrigin/logs/worker.log
+StandardError=append:/home/DEINUSER/AuronOrigin/logs/worker.log
+
+[Install]
+WantedBy=multi-user.target
