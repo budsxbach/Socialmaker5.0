@@ -75,3 +75,7 @@ Datei einfach `python3 tools/build_plan.py` erneut ausführen.
 
 Keine Rechts-, Steuer- oder Anlageberatung. Plattformregeln vor Veröffentlichung
 selbst prüfen.
+
+## Stimmwechsel: Englischsprachige Videos auf Deutsch
+
+Die eigenständige Web-App **Stimmwechsel** ersetzt die Originaltonspur eines Videos durch eine zeitlich angepasste deutsche Erzählerstimme. Sie nutzt Faster Whisper, Ollama oder Argos und Edge TTS, Piper oder espeak-ng; eine lokale Verarbeitung ist möglich. Start, Voraussetzungen und Datenschutzhinweise: [dubber/README.md](dubber/README.md).

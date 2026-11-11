@@ -1,0 +1,9 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+python-multipart>=0.0.9,<1
+faster-whisper>=1.1,<2
+av>=11,<19
+imageio-ffmpeg>=0.5,<1
+requests>=2.31,<3
+edge-tts>=7,<8
+# Optional offline translation: pip install argostranslate
