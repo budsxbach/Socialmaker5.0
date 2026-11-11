@@ -6,4 +6,7 @@ __pycache__/
 n8n_data/
 *.log
 AuronOrigin/
+dubber/data/
 .DS_Store
+
+.venv-dubber/
